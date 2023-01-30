@@ -8,7 +8,7 @@ function App() {
 
   let post = '강아지 대통령';
   let [title, setTitle] = useState(['강아지사료1', '강아지사료2', '강아지사료3']);
-  let [like, setLike] = useState(0);
+  let [like, setLike] = useState([0,0,0]);
   let [modal, setModal] = useState(false);
 
 function orderTitle() {
@@ -32,7 +32,7 @@ function orderTitle() {
       <button onClick={ orderTitle }>가나다순 버튼</button>
 
       <div className="list">
-        <h4>{title[0]} <span onClick={()=>{ setLike(like+1) }}>👍</span> {like} </h4>
+        <h4>{title[0]}</h4>
         <p>2월 17일 발행</p>
       </div>
       <div className="list">
@@ -45,20 +45,39 @@ function orderTitle() {
       </div>
 
       {
-        modal == true ? <Modal/> : null 
+        title.map(function(a, i){
+          return (
+            <div className="list">
+              <h4 onClick={()=>{ setModal(true)}}>{ title[i] } <span onClick={()=>{ 
+                let likeCnt = [...like];
+                likeCnt[i]++;
+                setLike(likeCnt);
+                }}>👍</span> {like[i]}</h4>
+              <p>2월 17일 발행</p>
+            </div>)
+        })
+
       }
+
+      {
+        modal == true ? <Modal title={title} setTitle={setTitle}/> : null 
+      }
+
+      <button onClick={() => { setModal(!modal)}}> 열고닫기 </button>
       
 
     </div>
   );
 }
 
-function Modal(){
+function Modal(props){
   return(
     <div className="modal">
-        <h4>제목</h4>
+        <h4>{props.title[0]}</h4>
         <p>날짜</p>
         <p>상세내용</p>
+        <button onClick={()=>{ props.setTitle(['고양이사료1', '강아지사료2', '강아지사료3']) 
+        }}>수정</button>
       </div>
   )
 }
